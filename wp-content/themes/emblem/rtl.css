@@ -1,0 +1,64 @@
+/*
+Theme Name: Rookie
+*/
+
+.main-navigation li.menu-item-has-children ul {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 0;
+}
+
+.posted-on {
+	float: right;
+}
+
+.search-form .search-field {
+	border-right-width: 1px;
+	border-left-width: 0;
+	border-radius: 3px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.search-form .search-submit {
+	border-radius: 3px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.sp-template-countdown time span {
+	border-right: 0;
+	border-left: 1px solid #e0e0e0;
+}
+
+.sp-template-countdown time span:first-child {
+	border-right: 1px solid #e0e0e0;
+}
+
+.single-sp_team .entry-header {
+	float: right;
+}
+
+@media screen and (min-width: 601px) {
+	.header-area-has-logo .main-navigation {
+		padding-left: 0;
+		padding-right: 100px;
+	}
+	
+	.site-logo {
+		margin: -1em 0 -1em 10px;
+	}
+
+	.site-footer .footer-widget-region {
+		padding-right: 0;
+		padding-left: 20px;
+	}
+
+	.site-footer .footer-widget-region:first-child {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.site-footer-has-logo .footer-widget-region:first-child {
+		padding-right: 0;
+	}
+}

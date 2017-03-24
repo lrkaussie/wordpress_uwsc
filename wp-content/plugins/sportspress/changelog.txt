@@ -1,5 +1,45 @@
 == SportsPress Changelog ==
 
+= 2.3.1 =
+* Tweak - Update version numbers of recommended sport-specific extensions.
+* Fix - Manually entered statistics not reflected in player profile totals.
+* Fix - Template hooks not callable for third-party integration.
+* Fix - Error when editing league tables in PHP versions earlier than 5.5.
+
+= 2.3 =
+* Feature - New setup wizard for first-time installs.
+* Feature - Option to automatically create player profiles during user registration.
+* Feature - Choose team or individual mode for each event.
+* Feature - Send Off setting for player statistics to suspend minute count for that player.
+* Tweak - Remove horizontal scrolling in dashboard to fix hidden dropdowns.
+* Tweak - Revert text color overrides for dark color schemes in frontend styles.
+* Fix - Borrowed players not automatically loading on event edit.
+* Fix - Played minutes calculation and player profile statistics.
+
+= 2.2.11 =
+* Fix - Timeout issue when tiebreaker checks for head-to-head standings.
+* Fix - Check for REST API controllers to prevent errors when using Jetpack.
+
+= 2.2.10 =
+* Tweak - Update modules page.
+* Fix - League table discrepancy due to change in number of teams setting.
+* Fix - JavaScript error caused by box score displaying icons without players.
+
+= 2.2.9 =
+* Fix - Warning message above player list template.
+
+= 2.2.8 =
+* Fix - Hidden box score header in values mode.
+* Fix - Welcome page displaying after upgrade if preset was saved from settings.
+* Fix - Decimal places being dropped from player list statistics.
+
+= 2.2.7 =
+* Tweak - Adjust frontend styles to allow some overrides.
+* Tweak - Update modules page with new module options.
+* Fix - Javascript error in icon mode box scores.
+* Fix - Player list default sorting issue.
+* Fix - Empty team checkboxes in player quick edit.
+
 = 2.2.6 =
 * Tweak - Hide box score table header row in icon mode.
 * Tweak - Adjust frontend stylesheet.
@@ -143,7 +183,7 @@
 * Feature - Add squad number and name option to player details.
 * Feature - Add tab options to layout designer.
 * Feature - Add option to display player and staff dropdowns in profiles.
-* Feature - Add option to select TBA, postponed, and cancelled event status.
+* Feature - Add option to select TBA, postponed, and canceled event status.
 * Feature - Licenses tab for third-party extensions.
 * Tweak - Get player data only when needed.
 * Tweak - Add capabilities to taxonomies.

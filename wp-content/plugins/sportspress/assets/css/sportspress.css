@@ -218,6 +218,13 @@
 	cursor: pointer;
 }
 
+/* Messages */
+.sp-message {
+	padding: 1em;
+	border: 1px solid transparent;
+	text-align: center;
+}
+
 /* Event Logos */
 .sp-event-logos a {
 	text-decoration: none;
@@ -253,6 +260,9 @@
 }
 
 /* Event Performance */
+.sp-template-event-performance-icons thead {
+	display: none;
+}
 .sp-event-performance .sub {
 	background: rgba(0,0,0,0.05);
 }

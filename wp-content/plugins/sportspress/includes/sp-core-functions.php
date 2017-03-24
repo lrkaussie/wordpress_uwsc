@@ -7,7 +7,7 @@
  * @author 		ThemeBoy
  * @category 	Core
  * @package 	SportsPress/Functions
- * @version     2.2.4
+ * @version     2.3.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -500,6 +500,69 @@ if ( !function_exists( 'sp_get_term_sections' ) ) {
 		
 		return $sections;
 	}
+}
+
+if ( !function_exists( 'sp_get_default_mode' ) ) {
+	function sp_get_default_mode() {
+		$mode = get_option( 'sportspress_mode', 'team' );
+
+		if ( empty( $mode ) ) {
+			$mode = 'team';
+		}
+
+		return $mode;
+	}
+}
+
+if ( !function_exists( 'sp_get_post_mode' ) ) {
+	function sp_get_post_mode( $post_id ) {
+    $mode = get_post_meta( $post_id, 'sp_mode', true );
+
+    if ( empty( $mode ) ) {
+    	$mode = sp_get_default_mode();
+    }
+
+    return $mode;
+  }
+}
+
+if ( !function_exists( 'sp_get_post_mode_type' ) ) {
+	function sp_get_post_mode_type( $post_id ) {
+		$mode = sp_get_post_mode( $post_id );
+
+		$post_type = "sp_$mode";
+
+		if ( ! in_array( $post_type, sp_primary_post_types() ) ) {
+			$post_type = sp_get_default_mode();
+		}
+
+		return $post_type;
+  }
+}
+
+if ( !function_exists( 'sp_get_post_mode_label' ) ) {
+	function sp_get_post_mode_label( $post_id, $singular = false ) {
+		$labels = array(
+			'team' => array(
+				__( 'Teams', 'sportspress' ),
+				__( 'Team', 'sportspress' ),
+			),
+			'player' => array(
+				__( 'Players', 'sportspress' ),
+				__( 'Player', 'sportspress' ),
+			),
+		);
+
+		$mode = sp_get_post_mode( $post_id );
+
+		if ( ! array_key_exists( $mode, $labels ) ) {
+			$mode = 'team';
+		}
+
+		$index = intval( $singular );
+
+		return $labels[ $mode ][ $index ];
+  }
 }
 
 if ( !function_exists( 'sp_dropdown_statuses' ) ) {
@@ -1360,7 +1423,7 @@ function sp_get_text_options() {
 		__( 'Article', 'sportspress' ),
 		__( 'Away', 'sportspress' ),
 		__( 'Box Score', 'sportspress' ),
-		__( 'Cancelled', 'sportspress' ),
+		__( 'Canceled', 'sportspress' ),
 		__( 'Career Total', 'sportspress' ),
 		__( 'Competition', 'sportspress' ),
 		__( 'Current Team', 'sportspress' ),

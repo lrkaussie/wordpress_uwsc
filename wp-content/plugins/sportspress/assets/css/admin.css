@@ -15,8 +15,13 @@
 	content: "\f328";
 }
 
+.post-state-format.post-format-player:before, .post-format-icon.post-format-player:before, a.post-state-format.format-player:before,
 .post-state-format.post-format-roster:before, .post-format-icon.post-format-roster:before, a.post-state-format.format-roster:before {
 	content: "\f307";
+}
+
+.post-state-format.post-format-team:before, .post-format-icon.post-format-team:before, a.post-state-format.format-team:before {
+	content: "\f334";
 }
 
 .post-state-format.post-format-list:before, .post-format-icon.post-format-list:before, a.post-state-format.format-list:before {
@@ -242,10 +247,6 @@
 .sportspress .submit,
 .sp-data-table-container {
 	clear: both;
-}
-
-.sp-data-table-container {
-	overflow-x: scroll;
 }
 
 .sp-data-table-container::-webkit-scrollbar {
@@ -757,6 +758,14 @@ table.widefat.sp-sortable-table tbody tr .icon {
     border: 1px dashed #b4b9be;
     margin: 9px auto 6px;
     height: 42px;
+}
+
+/* Logo */
+.sp-settings-logo {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: 35px;
 }
 
 /* Modules */

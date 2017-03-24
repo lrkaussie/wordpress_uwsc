@@ -5,7 +5,7 @@
  * @author 		ThemeBoy
  * @category 	Admin
  * @package 	SportsPress/Admin/Meta_Boxes
- * @version     2.2
+ * @version     2.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -28,10 +28,6 @@ class SP_Meta_Box_List_Details {
 		$order = get_post_meta( $post->ID, 'sp_order', true );
 		$select = get_post_meta( $post->ID, 'sp_select', true );
 		$number = get_post_meta( $post->ID, 'sp_number', true );
-		if ( ! $select ) {
-			global $pagenow;
-			$select = ( 'post-new.php' == $pagenow ? 'auto' : 'manual' );
-		}
 		?>
 		<div>
 			<p><strong><?php _e( 'Heading', 'sportspress' ); ?></strong></p>
@@ -42,7 +38,6 @@ class SP_Meta_Box_List_Details {
 				sp_taxonomy_field( $taxonomy, $post, true );
 			}
 			?>
-			<?php if ( apply_filters( 'sportspress_list_team_selector', true ) ) { ?>
 			<p><strong><?php _e( 'Team', 'sportspress' ); ?></strong></p>
 			<p class="sp-tab-select sp-team-era-selector">
 				<?php
@@ -63,7 +58,6 @@ class SP_Meta_Box_List_Details {
 					<option value="past" <?php selected( 'past', $era ); ?>><?php _e( 'Past', 'sportspress' ); ?></option>
 				</select>
 			</p>
-			<?php } ?>
 			<p><strong><?php _e( 'Grouping', 'sportspress' ); ?></strong></p>
 			<p>
 			<select name="sp_grouping">

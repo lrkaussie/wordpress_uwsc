@@ -5,7 +5,7 @@
  * Description: A suite of cricket features for SportsPress.
  * Author: ThemeBoy
  * Author URI: http://themeboy.com/
- * Version: 1.1
+ * Version: 1.1.1
  *
  * Text Domain: sportspress-for-cricket
  * Domain Path: /languages/
@@ -20,7 +20,7 @@ if ( ! class_exists( 'SportsPress_Cricket' ) ) :
  * Main SportsPress Cricket Class
  *
  * @class SportsPress_Cricket
- * @version	1.1
+ * @version	1.1.1
  */
 class SportsPress_Cricket {
 
@@ -73,6 +73,9 @@ class SportsPress_Cricket {
 		
 		// Display outcome below results
 		add_action( 'sportspress_after_event_logos', array( $this, 'output_event_score_status' ) );
+
+		// Define default sport
+		add_filter( 'sportspress_default_sport', array( $this, 'default_sport' ) );
 	}
 
 	/**
@@ -80,7 +83,7 @@ class SportsPress_Cricket {
 	*/
 	private function define_constants() {
 		if ( !defined( 'SP_CRICKET_VERSION' ) )
-			define( 'SP_CRICKET_VERSION', '1.1' );
+			define( 'SP_CRICKET_VERSION', '1.1.1' );
 
 		if ( !defined( 'SP_CRICKET_URL' ) )
 			define( 'SP_CRICKET_URL', plugin_dir_url( __FILE__ ) );
@@ -169,7 +172,7 @@ class SportsPress_Cricket {
 				'name'        => 'SportsPress',
 				'slug'        => 'sportspress',
 				'required'    => true,
-				'version'     => '2.1',
+				'version'     => '2.3',
 				'is_callable' => array( 'SportsPress', 'instance' ),
 			),
 		);
@@ -512,6 +515,13 @@ class SportsPress_Cricket {
 			?>
 		</p>
 		<?php
+	}
+
+	/**
+	 * Define default sport.
+	*/
+	public function default_sport() {
+		return 'cricket';
 	}
 }
 

@@ -5,7 +5,7 @@
  * The SportsPress player list class handles individual player list data.
  *
  * @class 		SP_Player_List
- * @version     2.2.6
+ * @version   2.3
  * @package		SportsPress/Classes
  * @category	Class
  * @author 		ThemeBoy
@@ -25,7 +25,7 @@ class SP_Player_List extends SP_Custom_Post {
 		parent::__construct( $post );
 		$this->columns = get_post_meta( $this->ID, 'sp_columns', true );
 		if ( is_array( $this->columns ) ) $this->columns = array_filter( $this->columns );
-		else $this->columns = array();
+		else $this->columns = array( 'number', 'team', 'position' );
 	}
 
 	/**
@@ -46,6 +46,11 @@ class SP_Player_List extends SP_Custom_Post {
 		$orderby = get_post_meta( $this->ID, 'sp_orderby', true );
 		$order = get_post_meta( $this->ID, 'sp_order', true );
 		$select = get_post_meta( $this->ID, 'sp_select', true );
+
+		// Apply defaults
+		if ( empty( $orderby ) ) $orderby = 'number';
+		if ( empty( $order ) ) $order = 'ASC';
+		if ( empty( $select ) ) $select = 'auto';
 
 		// Get labels from performance variables
 		$performance_labels = (array)sp_get_var_labels( 'sp_performance' );
@@ -96,7 +101,7 @@ class SP_Player_List extends SP_Custom_Post {
 				);
 			endif;
 
-			if ( $team && apply_filters( 'sportspress_has_teams', true ) ):
+			if ( $team ):
 				$team_key = 'sp_team';
 				switch ( $era ):
 					case 'current':
@@ -141,6 +146,85 @@ class SP_Player_List extends SP_Custom_Post {
 		// Initialize last counters
 		$last5s = array();
 		$last10s = array();
+
+		$args = array(
+			'post_type' => array( 'sp_performance', 'sp_metric', 'sp_statistic' ),
+			'numberposts' => -1,
+			'posts_per_page' => -1,
+	  		'orderby' => 'menu_order',
+	  		'order' => 'ASC',
+			'meta_query' => array(
+        		'relation' => 'OR',
+				array(
+					'key' => 'sp_format',
+					'value' => 'number',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key' => 'sp_format',
+					'value' => array( 'equation', 'text' ),
+					'compare' => 'NOT IN',
+				),
+			),
+		);
+		$stats = get_posts( $args );
+
+		$formats = array();
+		$sendoffs = array();
+		$data = array();
+		$merged = array();
+		$column_order = array();
+		$ordered_columns = array();
+
+		if ( $stats ):
+
+			foreach ( $stats as $stat ):
+
+				// Get post meta
+				$meta = get_post_meta( $stat->ID );
+
+				// Add equation to object
+				if ( $stat->post_type == 'sp_metric' ):
+					$stat->equation = null;
+				else:
+					$stat->equation = sp_array_value( sp_array_value( $meta, 'sp_equation', array() ), 0, 0 );
+				endif;
+
+				// Add precision to object
+				$stat->precision = sp_array_value( sp_array_value( $meta, 'sp_precision', array() ), 0, 0 ) + 0;
+
+				// Add column name to columns
+				$columns[ $stat->post_name ] = $stat->post_title;
+
+				// Add format
+				$format = get_post_meta( $stat->ID, 'sp_format', true );
+				if ( '' === $format ) {
+					$format = 'number';
+				}
+				$formats[ $stat->post_name ] = $format;
+
+				// Add sendoffs
+				$sendoff = get_post_meta( $stat->ID, 'sp_sendoff', true );
+				if ( $sendoff ) {
+					$sendoffs[] = $stat->post_name;
+				}
+
+				$column_order[] = $stat->post_name;
+
+			endforeach;
+
+		endif;
+
+		foreach ( $column_order as $slug ):
+
+			if ( ! in_array( $slug, $this->columns ) ) continue;
+
+			$ordered_columns[] = $slug;
+
+		endforeach;
+
+		$diff = array_diff( $this->columns, $ordered_columns );
+		$this->columns = array_merge( $diff, $ordered_columns );
 
 		foreach ( $player_ids as $player_id ):
 			if ( ! $player_id )
@@ -320,26 +404,71 @@ class SP_Player_List extends SP_Custom_Post {
 								$totals[ $player_id ]['eventsattended'] ++;
 
 								// Continue with incrementing values if active in event
-								if ( sp_array_value( $player_performance, 'status' ) != 'sub' || sp_array_value( $player_performance, 'sub', 0 ) ): 
+								if ( sp_array_value( $player_performance, 'status' ) != 'sub' || sp_array_value( $player_performance, 'sub', 0 ) ):
 									$totals[ $player_id ]['eventsplayed'] ++;
-									$totals[ $player_id ]['eventminutes'] += $minutes;
 
-									// Adjust for substitution time
+									// Initialize played minutes
+									$played_minutes = $minutes;
+
+									// Adjust for sendoffs and substitution time
 									if ( sp_array_value( $player_performance, 'status' ) === 'sub' ):
-										$totals[ $player_id ]['eventminutes'] -= sp_array_value( sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $player_id ), 'sub' ), 0, 0 );
+
+										// Substituted for another player
+										$timeline_performance = sp_array_value( sp_array_value( $timeline, $team_id, array() ), $player_id, array() );
+										if ( empty( $timeline_performance ) ) continue;
+										foreach ( $sendoffs as $sendoff_key ):
+											if ( ! array_key_exists( $sendoff_key, $timeline_performance ) ) continue;
+											$sendoff_times = sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $player_id ), $sendoff_key );
+											$sendoff_times = array_filter( $sendoff_times );
+											$sendoff_time = end( $sendoff_times );
+											if ( ! $sendoff_time ) $sendoff_time = 0;
+
+											// Count minutes until being sent off
+											$played_minutes = $sendoff_time;
+										endforeach;
+
+										// Subtract minutes prior to substitution
+										$substitution_time = sp_array_value( sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $player_id ), 'sub' ), 0, 0 );
+										$played_minutes -= $substitution_time;
 									else:
+
+										// Starting lineup with possible substitution
+										$subbed_out = false;
 										foreach ( $timeline as $timeline_team => $timeline_players ):
 											if ( ! is_array( $timeline_players ) ) continue;
 											foreach ( $timeline_players as $timeline_player => $timeline_performance ):
 												if ( 'sub' === sp_array_value( sp_array_value( $players, $timeline_player, array() ), 'status' ) && $player_id === (int) sp_array_value( sp_array_value( $players, $timeline_player, array() ), 'sub', 0 ) ):
 													$substitution_time = sp_array_value( sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $timeline_player ), 'sub' ), 0, 0 );
 													if ( $substitution_time ):
-														$totals[ $player_id ]['eventminutes'] += $substitution_time - $minutes;
+
+														// Count minutes until substitution
+														$played_minutes = $substitution_time;
+														$subbed_out = true;
 													endif;
 												endif;
 											endforeach;
+
+											// No need to check for sendoffs if subbed out
+											if ( $subbed_out ) continue;
+
+											// Check for sendoffs
+											$timeline_performance = sp_array_value( $timeline_players, $player_id, array() );
+											if ( empty( $timeline_performance ) ) continue;
+											foreach ( $sendoffs as $sendoff_key ):
+												if ( ! array_key_exists( $sendoff_key, $timeline_performance ) ) continue;
+												if ( ! sp_array_value( $player_performance, $sendoff_key, 0 ) ) continue;
+												$sendoff_times = sp_array_value( sp_array_value( sp_array_value( $timeline, $team_id ), $player_id ), $sendoff_key );
+												$sendoff_times = array_filter( $sendoff_times );
+												$sendoff_time = end( $sendoff_times );
+												if ( false === $sendoff_time ) continue;
+
+												// Count minutes until being sent off
+												$played_minutes = $sendoff_time;
+											endforeach;
 										endforeach;
 									endif;
+
+									$totals[ $player_id ]['eventminutes'] += max( 0, $played_minutes );
 
 									if ( sp_array_value( $player_performance, 'status' ) == 'lineup' ):
 										$totals[ $player_id ]['eventsstarted'] ++;
@@ -452,78 +581,6 @@ class SP_Player_List extends SP_Custom_Post {
 			$totals[ $player_id ]['last10'] = $last10;
 		endforeach;
 
-		$args = array(
-			'post_type' => array( 'sp_performance', 'sp_metric', 'sp_statistic' ),
-			'numberposts' => -1,
-			'posts_per_page' => -1,
-	  		'orderby' => 'menu_order',
-	  		'order' => 'ASC',
-			'meta_query' => array(
-        		'relation' => 'OR',
-				array(
-					'key' => 'sp_format',
-					'value' => 'number',
-					'compare' => 'NOT EXISTS',
-				),
-				array(
-					'key' => 'sp_format',
-					'value' => array( 'equation', 'text' ),
-					'compare' => 'NOT IN',
-				),
-			),
-		);
-		$stats = get_posts( $args );
-
-		$formats = array();
-		$data = array();
-		$merged = array();
-		$column_order = array();
-		$ordered_columns = array();
-
-		if ( $stats ):
-
-			foreach ( $stats as $stat ):
-
-				// Get post meta
-				$meta = get_post_meta( $stat->ID );
-
-				// Add equation to object
-				if ( $stat->post_type == 'sp_metric' ):
-					$stat->equation = null;
-				else:
-					$stat->equation = sp_array_value( sp_array_value( $meta, 'sp_equation', array() ), 0, 0 );
-				endif;
-
-				// Add precision to object
-				$stat->precision = sp_array_value( sp_array_value( $meta, 'sp_precision', array() ), 0, 0 ) + 0;
-
-				// Add column name to columns
-				$columns[ $stat->post_name ] = $stat->post_title;
-
-				// Add format
-				$format = get_post_meta( $stat->ID, 'sp_format', true );
-				if ( '' === $format ) {
-					$format = 'number';
-				}
-				$formats[ $stat->post_name ] = $format;
-
-				$column_order[] = $stat->post_name;
-
-			endforeach;
-
-		endif;
-
-		foreach ( $column_order as $slug ):
-
-			if ( ! in_array( $slug, $this->columns ) ) continue;
-
-			$ordered_columns[] = $slug;
-
-		endforeach;
-
-		$diff = array_diff( $this->columns, $ordered_columns );
-		$this->columns = array_merge( $diff, $ordered_columns );
-
 		// Fill in empty placeholder values for each player
 		foreach ( $player_ids as $player_id ):
 			if ( ! $player_id )
@@ -555,10 +612,16 @@ class SP_Player_List extends SP_Custom_Post {
 				endif;
 
 				if ( $placeholder !== '' && is_numeric( $placeholder ) ):
-					$placeholders[ $player_id ][ $stat->post_name ] = sp_array_value( $placeholders[ $player_id ], $stat->post_name, 0 ) + $placeholder;
+					$placeholder = sp_array_value( $placeholders[ $player_id ], $stat->post_name, 0 ) + $placeholder;
 				else:
-					$placeholders[ $player_id ][ $stat->post_name ] = sp_array_value( $placeholders[ $player_id ], $stat->post_name, '-' );
+					$placeholder = sp_array_value( $placeholders[ $player_id ], $stat->post_name, '-' );
 				endif;
+
+				if ( is_numeric( $placeholder ) && $stat->precision ):
+					$placeholder = number_format( $placeholder, $stat->precision, '.', '' );
+				endif;
+
+				$placeholders[ $player_id ][ $stat->post_name ] = $placeholder;
 			endforeach;
 
 		endforeach;
@@ -642,7 +705,7 @@ class SP_Player_List extends SP_Custom_Post {
 			foreach( $this->columns as $key ):
 				if ( $key == 'number' ):
 					$labels[ $key ] = '#';
-				elseif ( $key == 'team' && apply_filters( 'sportspress_has_teams', true ) ):
+				elseif ( $key == 'team' ):
 					$labels[ $key ] = __( 'Team', 'sportspress' );
 				elseif ( $key == 'position' ):
 					$labels[ $key ] = __( 'Position', 'sportspress' );
@@ -689,7 +752,7 @@ class SP_Player_List extends SP_Custom_Post {
 			$labels = array();
 			if ( in_array( 'number', $this->columns ) ) $labels['number'] = '#';
 			$labels['name'] = __( 'Player', 'sportspress' );
-			if ( in_array( 'team', $this->columns ) && apply_filters( 'sportspress_has_teams', true ) ) $labels['team'] = __( 'Team', 'sportspress' );
+			if ( in_array( 'team', $this->columns ) ) $labels['team'] = __( 'Team', 'sportspress' );
 			if ( in_array( 'position', $this->columns ) ) $labels['position'] = __( 'Position', 'sportspress' );
 
 			$merged[0] = array_merge( $labels, $columns );
@@ -733,6 +796,6 @@ class SP_Player_List extends SP_Custom_Post {
 		endforeach; endif; 
 
 		// Default sort by number
-		return sp_array_value( $a, 'number', 0 ) - sp_array_value( $b, 'number', 0 );
+		return floatval( sp_array_value( $a, 'number', 0 ) ) - floatval( sp_array_value( $b, 'number', 0 ) );
 	}
 }

@@ -5,7 +5,7 @@
  * @author 		ThemeBoy
  * @category 	Admin
  * @package 	SportsPress/Admin/Meta_Boxes
- * @version     1.9.8
+ * @version     2.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -23,10 +23,7 @@ class SP_Meta_Box_Table_Details {
 		$taxonomies = get_object_taxonomies( 'sp_table' );
 		$caption = get_post_meta( $post->ID, 'sp_caption', true );
 		$select = get_post_meta( $post->ID, 'sp_select', true );
-		if ( ! $select ) {
-			global $pagenow;
-			$select = ( 'post-new.php' ? 'auto' : 'manual' );
-		}
+		$post_type = sp_get_post_mode_type( $post->ID );
 		?>
 		<div>
 			<p><strong><?php _e( 'Heading', 'sportspress' ); ?></strong></p>
@@ -38,7 +35,7 @@ class SP_Meta_Box_Table_Details {
 			}
 			?>
 			<p><strong>
-				<?php _e( 'Teams', 'sportspress' ); ?>
+				<?php echo sp_get_post_mode_label( $post->ID ); ?>
 			</strong></p>
 			<p class="sp-select-setting">
 				<select name="sp_select">
@@ -48,8 +45,8 @@ class SP_Meta_Box_Table_Details {
 			</p>
 			<?php
 			if ( 'manual' == $select ) {
-				sp_post_checklist( $post->ID, 'sp_team', ( 'auto' == $select ? 'none' : 'block' ), array( 'sp_league', 'sp_season' ) );
-				sp_post_adder( 'sp_team', __( 'Add New', 'sportspress' ) );
+				sp_post_checklist( $post->ID, $post_type, ( 'auto' == $select ? 'none' : 'block' ), array( 'sp_league', 'sp_season' ), null, 'sp_team' );
+				sp_post_adder( $post_type, __( 'Add New', 'sportspress' ) );
 			}
 			?>
 		</div>

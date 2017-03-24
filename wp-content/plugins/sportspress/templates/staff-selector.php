@@ -4,7 +4,7 @@
  *
  * @author 		ThemeBoy
  * @package 	SportsPress/Templates
- * @version     2.1.4
+ * @version     2.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -44,7 +44,7 @@ if ( $season_ids ):
 	);
 endif;
 
-if ( $team && apply_filters( 'sportspress_has_teams', true ) ):
+if ( $team ):
 	$args['meta_query'] = array(
 		array(
 			'key' => 'sp_team',

@@ -4,7 +4,7 @@
  *
  * @author 		ThemeBoy
  * @package 	SportsPress/Templates
- * @version     2.2.6
+ * @version     2.2.10
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -26,7 +26,7 @@ if ( ! isset( $subs ) ) $subs = array();
 		<h4 class="sp-table-caption"><?php echo $caption; ?></h4>
 	<?php endif; ?>
 	<div class="sp-table-wrapper">
-		<table class="sp-event-performance sp-data-table<?php if ( $scrollable ) { ?> sp-scrollable-table<?php } ?><?php if ( $sortable ) { ?> sp-sortable-table<?php } ?>">
+		<table class="sp-event-performance sp-data-table<?php if ( $mode == 'values' ) { ?><?php if ( $scrollable ) { ?> sp-scrollable-table<?php } ?><?php if ( $sortable ) { ?> sp-sortable-table<?php } ?><?php } ?>">
 			<thead>
 				<tr>
 					<?php if ( $mode == 'values' ): ?>

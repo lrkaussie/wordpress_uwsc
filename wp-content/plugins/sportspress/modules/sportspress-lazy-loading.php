@@ -5,7 +5,7 @@ Plugin URI: http://tboy.co/pro
 Description: Load players using Ajax to speed up the event edit screen.
 Author: ThemeBoy
 Author URI: http://themeboy.com
-Version: 2.1
+Version: 2.3
 */
 
 // Exit if accessed directly
@@ -17,7 +17,7 @@ if ( ! class_exists( 'SportsPress_Lazy_Loading' ) ) :
  * Main SportsPress Lazy Loading Class
  *
  * @class SportsPress_Lazy_Loading
- * @version	2.1
+ * @version	2.3
  */
 class SportsPress_Lazy_Loading {
 
@@ -173,7 +173,16 @@ class SportsPress_Lazy_Loading {
 		$posts = sp_get_posts( $post_type, $args );
 		$post_ids = wp_list_pluck( $posts, 'ID' );
 		$diff = array_diff( $post_ids, $selected );
+		$borrowed = array_diff( $selected, $post_ids );
 		$selected = array_flip( $selected );
+
+		if ( sizeof( $borrowed ) ) {
+			$args = array( 'post__in' => $borrowed );
+			$borrowed_posts = sp_get_posts( $post_type, $args );
+			if ( is_array( $borrowed_posts ) ) {
+				$posts += $borrowed_posts;
+			}
+		}
 		?>
 		<div id="<?php echo $slug; ?>-all" class="posttypediv tabs-panel wp-tab-panel sp-tab-panel sp-ajax-checklist sp-select-all-range" style="display: <?php echo $display; ?>;">
 			<input type="hidden" value="0" name="<?php echo $slug; ?><?php if ( isset( $index ) ) echo '[' . $index . ']'; ?>[]" />

@@ -5,7 +5,7 @@ Plugin URI: http://themeboy.com/
 Description: Add a template selector to SportsPress post types.
 Author: ThemeBoy
 Author URI: http://themeboy.com/
-Version: 1.9
+Version: 2.3
 */
 
 // Exit if accessed directly
@@ -17,7 +17,7 @@ if ( ! class_exists( 'SportsPress_Template_Selector' ) ) :
  * Main SportsPress Template Selector Class
  *
  * @class SportsPress_Template_Selector
- * @version	1.9
+ * @version	2.3
  */
 class SportsPress_Template_Selector {
 
@@ -46,7 +46,7 @@ class SportsPress_Template_Selector {
 	*/
 	private function define_constants() {
 		if ( !defined( 'SP_TEMPLATE_SELECTOR_VERSION' ) )
-			define( 'SP_TEMPLATE_SELECTOR_VERSION', '1.9' );
+			define( 'SP_TEMPLATE_SELECTOR_VERSION', '2.3' );
 
 		if ( !defined( 'SP_TEMPLATE_SELECTOR_URL' ) )
 			define( 'SP_TEMPLATE_SELECTOR_URL', plugin_dir_url( __FILE__ ) );
@@ -73,10 +73,7 @@ class SportsPress_Template_Selector {
 	 * Add option to team post type.
 	*/
 	public function team_options( $options ) {
-		if ( apply_filters( 'sportspress_has_teams', true ) ) {
-			return $this->options( $options, 'team' );
-		}
-		return $options;
+		return $this->options( $options, 'team' );
 	}
 
 	/**

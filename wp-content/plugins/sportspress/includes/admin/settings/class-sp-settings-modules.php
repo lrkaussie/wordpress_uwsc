@@ -5,7 +5,7 @@
  * @author 		ThemeBoy
  * @category 	Admin
  * @package 	SportsPress/Admin
- * @version     2.1
+ * @version     2.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -74,33 +74,19 @@ class SP_Settings_Modules extends SP_Settings_Page {
 				</table>
 				<?php } ?>
 
-				<?php if ( ! class_exists( 'SportsPress_Twitter' ) ) { ?>
+				<?php if ( ! class_exists( 'SportsPress_Twitter' ) || ! class_exists( 'SportsPress_Facebook' ) ) { ?>
 				<table class="widefat" cellspacing="0">
 					<thead>
 						<tr><th>
-							<strong><?php _e( 'Twitter Module', 'sportspress' ); ?></strong>
+							<strong><?php _e( 'Get Freebies', 'sportspress' ); ?></strong>
 						</th></tr>
 					</thead>
 					<tbody>
 						<tr><td>
-							<ol><li><?php echo str_replace(
-								array( '[link]', '[/link]' ),
-								array( '<a target="_blank" href="http://twitter.com/themeboy">', '</a>' ),
-								__( 'Follow [link]@ThemeBoy[/link] on Twitter.','sportspress' )
-							); ?></li>
-							<li><?php echo str_replace(
-								array( '[link]', '[/link]' ),
-								array( '<a target="_blank" href="http://tboy.co/tweet">', '</a>' ),
-								__( 'Help spread the word by tweeting with [link]#SportsPress[/link] and get the Twitter module for free.','sportspress' )
-							); ?></li>
-							<li><?php echo str_replace(
-								array( '[link]', '[/link]' ),
-								array( '<a target="_blank" href="http://tboy.co/twittermodule">', '</a>' ),
-								__( '[link]Get the download link[/link].', 'sportspress' )
-							); ?></li></ol>
+							<p><?php _e( 'Instant access to exclusive SportsPress extensions and free downloads.', 'sportspress' ); ?></p>
 							<p class="sp-module-actions">
-								<span><?php _e( 'Free with tweet', 'sportspress' ); ?></span>
-								<a class="button" href="http://tboy.co/tweet" target="_blank"><?php _e( 'Tweet', 'sportspress' ); ?></a>
+								<span><?php _e( 'Create a free account', 'sportspress' ); ?></span>
+								<a class="button" href="http://tboy.co/account" target="_blank"><?php _e( 'Sign Up', 'sportspress' ); ?></a>
 							</p>
 						</td></tr>
 					</tbody>
@@ -136,7 +122,7 @@ class SP_Settings_Modules extends SP_Settings_Page {
 							</thead>
 							<tbody>
 								<tr><td>
-									<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>/assets/images/modules/rookie.png" class="sp-theme-screenshot">
+									<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>/assets/images/welcome/rookie.png" class="sp-theme-screenshot">
 									<p><?php _e( 'Rookie is a free starter theme for SportsPress designed by ThemeBoy.', 'sportspress' ); ?></p>
 									<p class="sp-module-actions">
 										<span><?php _e( 'Free', 'sportspress' ); ?></span>
@@ -239,16 +225,13 @@ class SP_Settings_Modules extends SP_Settings_Page {
 									<i class="<?php echo sp_array_value( $module, 'icon', 'dashicons dashicons-admin-generic' ); ?>"></i>
 									<?php echo sp_array_value( $module, 'label', $id ); ?>
 								</span>
-								<?php if ( isset( $module['desc'] ) && ! array_key_exists( 'action', $module ) ) { ?>
+								<?php if ( isset( $module['desc'] ) ) { ?>
 									<span class="sp-desc">
 										<?php echo $module['desc']; ?>
-										<?php if ( array_key_exists( 'link', $module ) && ! array_key_exists( 'action', $module ) ) { ?>
+										<?php if ( array_key_exists( 'link', $module ) ) { ?>
 											<a href="<?php echo $module['link']; ?>" target="_blank"><?php echo sp_array_value( $module, 'action', __( 'Learn more', 'sportspress' ) ); ?></a>
 										<?php } ?>
 									</span>
-								<?php } ?>
-								<?php if ( array_key_exists( 'link', $module ) && array_key_exists( 'action', $module ) ) { ?>
-									<a class="button" href="<?php echo $module['link']; ?>" target="_blank"><?php echo sp_array_value( $module, 'action', __( 'Learn more', 'sportspress' ) ); ?></a>
 								<?php } ?>
 							</td></tr>
 							<?php } else { ?>

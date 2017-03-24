@@ -9,7 +9,7 @@
  * @author 		ThemeBoy
  * @category 	Admin
  * @package 	SportsPress/Admin
- * @version     2.2.4
+ * @version   2.3
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -161,6 +161,7 @@ class SP_Admin_Welcome {
 				$sport = $_POST['sportspress_sport'];
 				SP_Admin_Sports::apply_preset( $sport );
 				update_option( 'sportspress_sport', $_POST['sportspress_sport'] );
+    			delete_option( '_sp_needs_welcome' );
 	    		update_option( 'sportspress_installed', 1 );
 				?>
 				<div id="message" class="updated sportspress-message">
@@ -172,203 +173,83 @@ class SP_Admin_Welcome {
 				SP_Admin_Sample_Data::delete_posts();
 				SP_Admin_Sample_Data::insert_posts();
 			endif;
+
+			do_action( 'sportspress_before_welcome_features' );
 			?>
-			<?php if ( get_option( 'sportspress_installed' ) ) { ?>
+			<div class="feature-section two-col">
+				<h2>Mode Switching</h2>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-team-vs-team.png" alt="Team vs Team">
+					<h3>Team vs Team</h3>
+					<p>Switch between team and individual mode per event. By default, events are held between teams with multiple players on each side.</p>
+				</div>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-player-vs-player.png" alt="Player vs Player">
+					<h3>Player vs Player</h3>
+					<p>Select this mode to remove team selectors in events. Instead, players compete with each other. Select a default mode in <a href="<?php echo add_query_arg( array( 'page' => 'sportspress', 'tab' => 'events' ), admin_url( 'admin.php' ) ); ?>">Event Options</a>.</p>
+				</div>
+			</div>
 
-				<?php do_action( 'sportspress_before_welcome_features' ); ?>
+			<hr>
 
-				<?php if ( ! current_theme_supports( 'sportspress' ) ) { ?>
+			<div class="feature-section three-col">
+				<h2>Time-Saving Features</h2>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-user-registration.png" alt="User Registration">
+					<h3>User Registration</h3>
+					<p>Automatically create player profiles for new users by enabling <strong>User Registration</strong> in <a href="<?php echo add_query_arg( array( 'page' => 'sportspress', 'tab' => 'players' ), admin_url( 'admin.php' ) ); ?>">Player Options</a> and <strong>Membership</strong> in <a href="<?php echo admin_url( 'options-general.php' ); ?>">General Settings</a>.</p>
+				</div>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-setup-wizard.png" alt="Setup Wizard">
+					<h3>Setup Wizard</h3>
+					<p>A guided <a href="<?php echo add_query_arg( array( 'page' => 'sp-setup' ), admin_url( 'admin.php' ) ); ?>">Setup Wizard</a> can help you get started by adding basic details, teams, players, staff, venues, and your first event.</p>
+				</div>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-send-offs.png" alt="Send Offs">
+					<h3>Send Offs</h3>
+					<p>A new <strong>Send Off</strong> option has been added to player performance settings, limiting the played minutes for sent off players.</p>
+				</div>
+			</div>
 
-					<div class="feature-section two-col">
-						<h2>New Frontend Stylesheet</h2>
-						<div class="col">
-							<img src="https://www.themeboy.com/wp-content/uploads/player-profile-style.jpg" alt="Templates">
-							<h3>Templates</h3>
-							<p>An optional default stylesheet has been added to enhance the design of SportsPress template elements in third-party themes.</p>
-						</div>
-						<div class="col">
-							<img src="https://www.themeboy.com/wp-content/uploads/event-blocks-style.png" alt="Widgets">
-							<h3>Widgets</h3>
-							<p>All related content including widgets can be styled instantly by enabling <strong>Frontend Styles</strong> in <a href="<?php echo add_query_arg( array( 'page' => 'sportspress', 'tab' => 'general' ), admin_url( 'admin.php' ) ); ?>">General Options</a>.</p>
-						</div>
-					</div>
+			<hr>
 
-					<hr>
+			<div class="feature-section two-col">
+				<h2>New in SportsPress Pro</h2>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-user-scores-frontend.png" alt="Frontend Submissions">
+					<h3>Frontend Submissions</h3>
+					<p>Display a frontend section for logged in players to submit their own scores. Optionally, registered staff and team managers can also submit scores for their entire team.</p>
+				</div>
+				<div class="col">
+					<img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>assets/images/welcome/screenshot-user-scores-admin.png" alt="Admin Approval">
+					<h3>Admin Approval</h3>
+					<p>Once the scores are received, the owner of the event or an admin user can approve or reject each submission. Logged in users can amend their submissions at any time. Only approved scores are published.</p>
+				</div>
+			</div>
 
-				<?php } ?>
+			<hr />
 
-				<div class="feature-section three-col">
-					<h2>More Advanced Statistics</h2>
+			<div class="changelog">
+				<h2>Under the Hood</h2>
+				<div class="under-the-hood three-col">
 					<div class="col">
-						<img src="https://www.themeboy.com/wp-content/uploads/chronological-streaks.png" alt="Chronological Streaks">
-						<h3>Chronological Streaks</h3>
-						<p>A new <strong>Form</strong> preset variable has been added to the equation builder for table columns. Use this variable to display the most recent outcomes with each outcome linking to that event.</p>
+						<h3>Loading Borrowed Players</h3>
+						<p>Players borrowed from other teams are now automatically loaded when editing events in the dashboard.</p>
 					</div>
 					<div class="col">
-						<img src="https://www.themeboy.com/wp-content/uploads/tiebreaker-setting.gif" alt="Head to Head Tiebreakers">
-						<h3>Head to Head Tiebreakers</h3>
-						<p>When two or more teams are tied in the general standings, SportsPress can now automatically analyze the events between those teams to determine who comes out on top.</p>
+						<h3>Frontend Style Overrides</h3>
+						<p>Text colors have been adjusted to improve readability when using color schemes with dark backgrounds and light text.</p>
 					</div>
 					<div class="col">
-						<img src="https://www.themeboy.com/wp-content/uploads/time-format.png" alt="Time Format">
-						<h3>Time Format</h3>
-						<p>A new <strong>Time</strong> format has been added to player performance settings. Times are saved as minutes, and displayed using time format with <em>0:00</em> as the default.</p>
+						<h3>Shared Box Score Template</h3>
+						<p>The templates used for rendering team and individual box scores have been combined into a single template.</p>
 					</div>
 				</div>
+			</div>
 
-				<hr>
+			<?php do_action( 'sportspress_after_welcome_features' ); ?>
 
-				<div class="feature-section two-col">
-					<h2>Bulk Actions</h2>
-					<div class="col">
-						<img src="https://www.themeboy.com/wp-content/uploads/bulk-team-calendars.gif" alt="Generate Team Calendars">
-						<h3>Generate Team Calendars</h3>
-						<p>Bulk actions has been added to instantly generate team calendars. Simply select the checkboxes next to each team, then choose <strong>Generate Calendars</strong> from the <strong>Bulk Actions</strong> dropdown and voilà!</p>
-					</div>
-					<div class="col">
-						<img src="https://www.themeboy.com/wp-content/uploads/bulk-player-teams.png" alt="Assign Teams to Players">
-						<h3>Assign Teams to Players</h3>
-						<p>Quickly add players to teams using the <strong>Bulk Edit</strong> feature. New sections have been added to select the current teams and past teams for multiple players at once.</p>
-					</div>
-				</div>
-
-				<hr />
-
-				<div class="changelog">
-					<h2>Admin Improvements</h2>
-					<div class="under-the-hood three-col">
-						<div class="col">
-							<h3>Player List Limits</h3>
-							<p>A limit option has been added to player lists when automatically adding players, enabling speedier queries.</p>
-						</div>
-						<div class="col">
-							<h3>Mixed Statistic Columns</h3>
-							<p>The order of player performance and statistics can now be mixed together by editing the order of each variable.</p>
-						</div>
-						<div class="col">
-							<h3>Explicit Team URL Redirect</h3>
-							<p>Decide whether to use native team pages or to redirect teams to their external URLs using the new <strong>Redirect</strong> option.</p>
-						</div>
-					</div>
-
-					<div class="under-the-hood three-col">
-						<div class="col">
-							<h3>Quick Edit Players</h3>
-							<p>In addition to editing the teams a player belongs to, squad numbers can also be updated via the <strong>Quick Edit</strong> menu</p>
-						</div>
-						<div class="col">
-							<h3>Independent Timed Option</h3>
-							<p>Choose which values in the box score need minutes recorded, with an independent setting for each column.</p>
-						</div>
-						<div class="col">
-							<h3>Taxonomies in REST API</h3>
-							<p>New endpoints have been added for taxonomies including seasons, competitions, venues, positions, and jobs.</p>
-						</div>
-					</div>
-				</div>
-
-				<hr />
-
-				<div class="changelog">
-					<h2>Under the Hood</h2>
-					<div class="under-the-hood three-col">
-						<div class="col">
-							<h3>Variables Filtered by Offense and Defense</h3>
-							<p>Offense and defense statistics are now calculated using only the player performance from the same category.</p>
-						</div>
-						<div class="col">
-							<h3>Account for Substitution Time</h3>
-							<p>The <strong>Minutes</strong> equation variable is now automatically adjusted by subtracting substitution time.</p>
-						</div>
-						<div class="col">
-							<h3>Division by Zero</h3>
-							<p>No more errors when dividing by zero. Equations with undefined solutions now simply return zero for that value.</p>
-						</div>
-					</div>
-				</div>
-
-				<?php do_action( 'sportspress_after_welcome_features' ); ?>
-
-				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'sportspress', 'tab' => 'general' ), 'admin.php' ) ) ); ?>"><?php _e( 'Go to SportsPress Settings', 'sportspress' ); ?></a>
-
-			<?php } else { ?>
-
-				<div class="sp-feature feature-section col two-col">
-					<div>
-						<form method="post" id="mainform" action="" enctype="multipart/form-data">
-							<h4><?php _e( 'Basic Setup', 'sportspress' ); ?></h4>
-							<p><?php _e( 'Select your timezone and sport to get started.', 'sportspress' ); ?></p>
-							<table class="form-table">
-								<tbody>
-									<tr valign="top">
-										<th scope="row" class="titledesc">
-											<label for="timezone_string"><?php _e( 'Timezone', 'sportspress' ); ?> <i class="dashicons dashicons-editor-help sp-desc-tip" title="<?php _e( 'Choose a city in the same timezone as you.', 'sportspress' ); ?>"></i></label>
-										</th>
-										<td>
-											<select id="timezone_string" name="timezone_string" class="<?php echo $class; ?>">
-												<?php
-												$current_offset = get_option('gmt_offset');
-												$tzstring = get_option('timezone_string');
-
-												$check_zone_info = true;
-
-												// Remove old Etc mappings. Fallback to gmt_offset.
-												if ( false !== strpos($tzstring,'Etc/GMT') )
-													$tzstring = '';
-
-												if ( empty($tzstring) ) { // Create a UTC+- zone if no timezone string exists
-													$check_zone_info = false;
-													if ( 0 == $current_offset )
-														$tzstring = 'UTC+0';
-													elseif ($current_offset < 0)
-														$tzstring = 'UTC' . $current_offset;
-													else
-														$tzstring = 'UTC+' . $current_offset;
-												}
-												echo wp_timezone_choice($tzstring);
-												?>
-											</select>
-										</td>
-									</tr>
-									<?php
-									$sport_options = SP_Admin_Sports::get_preset_options();
-									$settings = array(
-										array(
-											'id'        => 'sportspress_sport',
-											'default'   => get_option( 'sportspress_sport', 'custom' ),
-											'type'      => 'sport',
-											'title'		=> __( 'Sport', 'sportspress' ),
-											'welcome' 	=> true,
-											'class' 	=> $class,
-											'options'   => $sport_options,
-										),
-									);
-									SP_Admin_Settings::output_fields( $settings );
-									?>
-								</tbody>
-							</table>
-					        <p class="submit sportspress-actions">
-					        	<input name="save" class="button-primary" type="submit" value="<?php _e( 'Save Changes', 'sportspress' ); ?>" />
-					        	<input type="hidden" name="subtab" id="last_tab" />
-					        	<?php wp_nonce_field( 'sportspress-settings' ); ?>
-					        </p>
-						</form>
-					</div>
-					<?php if ( current_user_can( 'install_themes' ) && ! current_theme_supports( 'sportspress' ) ) { ?>
-						<div class="last-feature">
-							<h4><?php _e( 'Free SportsPress Theme', 'sportspress' ); ?></h4>
-							<a href="<?php echo add_query_arg( array( 'theme' => 'rookie' ), network_admin_url( 'theme-install.php' ) ); ?>" class="sp-theme-screenshot"><img src="<?php echo plugin_dir_url( SP_PLUGIN_FILE ); ?>/assets/images/modules/rookie.png"></a>
-							<p><?php _e( 'Have you tried the free Rookie theme yet?', 'sportspress' ); ?></p>
-							<p><?php _e( 'Rookie is a free starter theme for SportsPress designed by ThemeBoy.', 'sportspress' ); ?></p>
-							<p class="sp-module-actions">
-								<a class="button button-large" href="<?php echo add_query_arg( array( 'theme' => 'rookie' ), network_admin_url( 'theme-install.php' ) ); ?>"><?php _e( 'Install Now', 'sportspress' ); ?></a>
-							</p>
-						</div>
-					<?php } ?>
-				</div>
-			
-			<?php } ?>
-
+			<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'sportspress', 'tab' => 'general' ), 'admin.php' ) ) ); ?>"><?php _e( 'Go to SportsPress Settings', 'sportspress' ); ?></a>
 		</div>
 		<?php
 	}
@@ -721,6 +602,11 @@ class SP_Admin_Welcome {
 
 		if ( ( isset( $_GET['action'] ) && 'upgrade-plugin' == $_GET['action'] ) && ( isset( $_GET['plugin'] ) && strstr( $_GET['plugin'], 'sportspress.php' ) ) )
 			return;
+
+		if ( ! get_option( 'sportspress_completed_setup' ) ) {
+			wp_redirect( admin_url( 'admin.php?page=sp-setup' ) );
+			exit;
+		}
 
 		wp_redirect( admin_url( 'index.php?page=sp-about' ) );
 		exit;

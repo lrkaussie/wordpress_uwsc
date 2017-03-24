@@ -4,7 +4,7 @@ Tags: calendars, club, club management, esports, events, fixtures, leagues, leag
 Donate link: http://tboy.co/donate
 Requires at least: 3.8
 Tested up to: 4.7
-Stable tag: 2.2.6
+Stable tag: 2.3.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -122,18 +122,11 @@ Looking for more advanced sports functionality? Upgrade to [SportsPress Pro](htt
 * League of Legends
 
 = SportsPress Themes for Clubs =
-* [Football Club](http://tboy.co/fc)
-* [Premier](http://tboy.co/premier)
+* [Courtside](http://tboy.co/courtside)
 * [Emblem](http://tboy.co/emblem)
+* [Football Club](http://tboy.co/fc)
 * [Marquee](http://tboy.co/marquee)
-
-= Documentation =
-* [Getting Started](http://tboy.co/installation)
-* [User Roles](http://tboy.co/roles)
-* [Integration Guide](http://tboy.co/integration)
-* [Actions](http://tboy.co/actionref)
-* [Filters](http://tboy.co/filterref)
-* [Shortcodes](http://tboy.co/shortcoderef)
+* [Premier](http://tboy.co/premier)
 
 = Get Involved =
 
@@ -184,12 +177,16 @@ If on the off-chance you do encounter issues with the event/team/player/staff pa
 
 == Screenshots ==
 
-1. Select your sport to automatically install presets and sample data.
-2. Each team has a unique logo and website URL. Optionally link teams from your blog to their official websites.
-3. The overview page provides a birds-eye view of your entire sports network.
-4. Configure variables used throughout the plugin to fit your sport. Presets are provided for some sports, and will automatically populate these options.
-5. Design your own points system using the custom drag-and-drop equation builder.
-6. Twenty Fourteen theme showcasing the dynamic league table and some of the included widgets.
+1. Add a suite of widgets to your site to display your own sports data.
+2. Generate automated standings that update whenever results are published.
+3. Schedule matches and display details, results, box scores, and a map to the venue.
+4. Register teams and players on your site and create lineups for each team.
+5. Display player profiles with configurable details and career stats.
+6. Select your sport to automatically install presets and sample data.
+7. Each team has a unique logo and website URL. Optionally link teams from your blog to their official websites.
+8. The overview page provides a birds-eye view of your entire sports network.
+9. Configure variables used throughout the plugin to fit your sport. Presets are provided for some sports, and will automatically populate these options.
+10. Design your own points system using the custom drag-and-drop equation builder.
 
 == Frequently Asked Questions ==
 
@@ -240,6 +237,43 @@ There are [3 different licenses](http://tboy.co/pro) that you can choose from: C
 When you upgrade to one of the SportsPress Pro licenses, you can simply activate the Pro version without losing any of your data. Please note that we recommend that you do a complete backup whenever you make big changes to your website.
 
 == Changelog ==
+
+= 2.3.1 =
+* Tweak - Update version numbers of recommended sport-specific extensions.
+* Fix - Manually entered statistics not reflected in player profile totals.
+* Fix - Template hooks not callable for third-party integration.
+* Fix - Error when editing league tables in PHP versions earlier than 5.5.
+
+= 2.3 =
+* Feature - New setup wizard for first-time installs.
+* Feature - Option to automatically create player profiles during user registration.
+* Feature - Choose team or individual mode for each event.
+* Feature - Send Off setting for player statistics to suspend minute count for that player.
+* Tweak - Remove horizontal scrolling in dashboard to fix hidden dropdowns.
+* Tweak - Revert text color overrides for dark color schemes in frontend styles.
+* Fix - Borrowed players not automatically loading on event edit.
+* Fix - Played minutes calculation and player profile statistics.
+* Preset - Update all presets to support new mode switching feature.
+
+= 2.2.10 =
+* Tweak - Update modules page.
+* Fix - League table discrepancy due to change in number of teams setting.
+* Fix - JavaScript error caused by box score displaying icons without players.
+
+= 2.2.9 =
+* Fix - Warning message above player list template.
+
+= 2.2.8 =
+* Fix - Hidden box score header in values mode.
+* Fix - Welcome page displaying after upgrade if preset was saved from settings.
+* Fix - Decimal places being dropped from player list statistics.
+
+= 2.2.7 =
+* Tweak - Adjust frontend styles to allow some overrides.
+* Tweak - Update modules page with new module options.
+* Fix - Javascript error in icon mode box scores.
+* Fix - Player list default sorting issue.
+* Fix - Empty team checkboxes in player quick edit.
 
 = 2.2.6 =
 * Tweak - Hide box score table header row in icon mode.
@@ -384,7 +418,7 @@ When you upgrade to one of the SportsPress Pro licenses, you can simply activate
 * Feature - Add squad number and name option to player details.
 * Feature - Add tab options to layout designer.
 * Feature - Add option to display player and staff dropdowns in profiles.
-* Feature - Add option to select TBA, postponed, and cancelled event status.
+* Feature - Add option to select TBA, postponed, and canceled event status.
 * Feature - Licenses tab for third-party extensions.
 * Tweak - Get player data only when needed.
 * Tweak - Add capabilities to taxonomies.

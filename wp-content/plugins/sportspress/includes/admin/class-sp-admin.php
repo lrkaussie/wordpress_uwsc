@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author 		ThemeBoy
  * @category 	Admin
  * @package 	SportsPress/Admin
- * @version     2.2
+ * @version     2.3
  */
 class SP_Admin {
 
@@ -54,6 +54,15 @@ class SP_Admin {
 			if ( 'yes' == get_option( 'sportspress_rich_editing', 'yes' ) ):
 				include( 'class-sp-admin-editor.php' );
 			endif;
+		}
+
+		// Setup/welcome
+		if ( ! empty( $_GET['page'] ) ) {
+			switch ( $_GET['page'] ) {
+				case 'sp-setup' :
+					include_once( 'class-sp-admin-setup-wizard.php' );
+				break;
+			}
 		}
 	}
 

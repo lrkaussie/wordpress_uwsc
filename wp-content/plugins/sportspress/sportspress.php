@@ -3,7 +3,7 @@
  * Plugin Name: SportsPress
  * Plugin URI: http://themeboy.com/sportspress/
  * Description: Manage your club and its players, staff, events, league tables, and player lists.
- * Version: 2.2.6
+ * Version: 2.3.1
  * Author: ThemeBoy
  * Author URI: http://themeboy.com
  * Requires at least: 3.8
@@ -26,14 +26,14 @@ if ( ! class_exists( 'SportsPress' ) ) :
  * Main SportsPress Class
  *
  * @class SportsPress
- * @version	2.2.6
+ * @version	2.3.1
  */
 final class SportsPress {
 
 	/**
 	 * @var string
 	 */
-	public $version = '2.2.6';
+	public $version = '2.3.1';
 
 	/**
 	 * @var SportsPress The single instance of the class
@@ -347,7 +347,7 @@ final class SportsPress {
 					'name'        => 'SportsPress for Baseball',
 					'slug'        => 'sportspress-for-baseball',
 					'required'    => false,
-					'version'     => '0.9.1',
+					'version'     => '0.9.2',
 				);
 				break;
 			case 'basketball':
@@ -355,7 +355,7 @@ final class SportsPress {
 					'name'        => 'SportsPress for Basketball',
 					'slug'        => 'sportspress-for-basketball',
 					'required'    => false,
-					'version'     => '0.9',
+					'version'     => '0.9.1',
 				);
 				break;
 			case 'cricket':
@@ -363,7 +363,7 @@ final class SportsPress {
 					'name'        => 'SportsPress for Cricket',
 					'slug'        => 'sportspress-for-cricket',
 					'required'    => false,
-					'version'     => '1.1',
+					'version'     => '1.1.1',
 				);
 				break;
 			case 'golf':
@@ -371,7 +371,7 @@ final class SportsPress {
 					'name'        => 'SportsPress for Golf',
 					'slug'        => 'sportspress-for-golf',
 					'required'    => false,
-					'version'     => '0.9',
+					'version'     => '0.9.1',
 				);
 				break;
 			case 'soccer':
@@ -379,7 +379,7 @@ final class SportsPress {
 					'name'        => 'SportsPress for Football (Soccer)',
 					'slug'        => 'sportspress-for-soccer',
 					'required'    => false,
-					'version'     => '0.9.5',
+					'version'     => '0.9.6',
 				);
 				break;
 		endswitch;
